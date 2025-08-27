@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-B">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32-CAM Live Stream</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        h1 { color: #333; }
+        img { border: 2px solid #ddd; max-width: 90%; height: auto; }
+    </style>
+</head>
+<body>
+
+    <h1>ESP32-CAM Live Stream</h1>
+    <p>Verbindung zum Live-Bild aus der Cloud.</p>
+    
+    <img id="live-stream" src="" alt="Lade Live-Stream...">
+
+    <script>
+        // HIER MUSST DU DIE ÖFFENTLICHE URL DEINES BILDES AUS DEM S3 BUCKET EINTRAGEN
+        const imageUrl = 'DEINE_S3_BILD_URL_HIER';
+
+        // Diese Funktion aktualisiert das Bild alle 100 Millisekunden
+        setInterval(function() {
+            const streamImage = document.getElementById('live-stream');
+            // Wir fügen einen Zeitstempel hinzu, um den Browser-Cache zu umgehen. Das ist SEHR WICHTIG!
+            streamImage.src = imageUrl + '?t=' + new Date().getTime();
+        }, 100);
+    </script>
+
+</body>
+</html>
