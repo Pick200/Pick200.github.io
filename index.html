@@ -6,7 +6,7 @@
     <title>Wavecam M - Live Surf Stream</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E🏄‍♂️%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -18,161 +18,120 @@
             --card-bg: #FFFFFF;
         }
 
-        /* Glattes Scroll-Verhalten */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--sand-bg);
-            color: var(--text-dark);
-        }
+        html { scroll-behavior: smooth; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--sand-bg); color: var(--text-dark); }
 
         /* --- Header & Welle --- */
-        header.main-header {
-            background: linear-gradient(45deg, var(--ocean-dark), var(--ocean-light));
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-        }
-
+        header.main-header { background: linear-gradient(45deg, var(--ocean-dark), var(--ocean-light)); color: white; padding: 30px 20px; text-align: center; }
         header.main-header h1 { margin: 0; font-size: clamp(2em, 5vw, 3.5em); }
         header.main-header p { margin: 5px 0 0; font-size: clamp(1em, 2.5vw, 1.2em); opacity: 0.9; }
-
         .wave-separator { line-height: 0; background-color: var(--sand-bg); }
         .wave-separator svg { display: block; width: 100%; height: 120px; fill: var(--ocean-dark); }
 
         /* --- Hauptcontainer & Layout --- */
-        .main-container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .main-container { padding: 20px; max-width: 1400px; margin: 0 auto; }
         .content-wrapper { display: flex; flex-direction: column; gap: 25px; }
 
         /* --- Stream Container --- */
-        .stream-container { flex: 3; }
+        .stream-container { flex: 4; }
         .stream-container img {
             width: 100%;
             height: auto;
             background-color: #ddd;
             display: block;
-            /* Kein Rahmen, keine runden Ecken */
             border: none;
             border-radius: 0;
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
-        
-        /* --- Werbe-Container --- */
-        .ads-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
+
+        /* --- Shop-Spalte (mittlere Spalte) --- */
+        .shop-column {
+            flex: 2;
+            position: relative; /* Wichtig für die Positionierung der Pfeile */
+            padding: 0 15px;
         }
 
-        .ad-placeholder {
-            background-color: var(--accent-red);
-            color: white;
+        .shop-column h2 { text-align: center; color: var(--ocean-dark); margin-top: 0; }
+        
+        .product-list-wrapper {
+            max-height: 500px; /* Höhe des scrollbaren Bereichs anpassen */
+            overflow-y: auto;
+            scrollbar-width: none; /* Versteckt Scrollbar */
+            padding-top: 5px;
+        }
+        .product-list-wrapper::-webkit-scrollbar { display: none; } /* Versteckt Scrollbar */
+        
+        .product-list { display: flex; flex-direction: column; gap: 15px; }
+
+        .product-card-vertical {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.07);
             display: flex;
             align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-weight: bold;
             padding: 10px;
-            min-height: 150px; /* Mindesthöhe */
-            flex-grow: 1;
-            /* Kein Rahmen, keine runden Ecken */
-            border-radius: 0;
         }
-        
-        /* --- Shop-Sektion --- */
-        .shop-section {
-            padding: 40px 0;
-            margin-top: 30px;
-        }
+        .product-card-vertical img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; margin-right: 15px; }
+        .product-card-vertical .info h3 { margin: 0; font-size: 1em; }
+        .product-card-vertical .info .price { font-size: 1.1em; font-weight: 700; color: var(--ocean-light); margin-top: 5px; }
 
-        .shop-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .shop-header h2 {
-            font-size: 2.5em;
-            color: var(--ocean-dark);
-            margin: 0 0 10px;
-        }
-
-        .shop-wrapper {
-            position: relative;
-        }
-
-        .product-scroller {
-            display: flex;
-            gap: 20px;
-            overflow-x: auto; /* Ermöglicht horizontales Scrollen/Wischen */
-            padding-bottom: 20px; /* Platz für Scrollbar */
-            scrollbar-width: none; /* Versteckt Scrollbar in Firefox */
-        }
-        .product-scroller::-webkit-scrollbar { display: none; } /* Versteckt Scrollbar in Chrome/Safari */
-
-        .product-card {
-            flex: 0 0 280px; /* Feste Breite für jede Karte */
-            background-color: var(--card-bg);
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            overflow: hidden;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .product-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
-        .product-card img { width: 100%; height: 180px; object-fit: cover; }
-        .product-card .info { padding: 20px; }
-        .product-card h3 { margin: 0 0 10px; }
-        .product-card .price { font-size: 1.5em; font-weight: 700; color: var(--ocean-light); margin-top: 15px; }
-
-        .scroll-arrow {
+        .scroll-arrow-vertical {
+            display: none; /* Auf Handy ausblenden */
             position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
+            left: 50%;
+            transform: translateX(-50%);
             background-color: rgba(255, 255, 255, 0.9);
-            border: none;
+            border: 1px solid #ccc;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             font-size: 24px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             z-index: 10;
-            display: none; /* Standardmässig auf Mobilgeräten ausblenden */
         }
-        .scroll-arrow:hover { background-color: white; }
-        .scroll-arrow.left { left: -25px; }
-        .scroll-arrow.right { right: -25px; }
-
+        .scroll-arrow-vertical.up { top: 45px; }
+        .scroll-arrow-vertical.down { bottom: 0; }
+        
+        /* --- Werbe-Container --- */
+        .ads-container { flex: 1.5; display: flex; flex-direction: column; gap: 25px; }
+        .ad-placeholder { background-color: var(--accent-red); color: white; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: bold; padding: 10px; min-height: 150px; flex-grow: 1; border-radius: 0; }
+        
         /* --- Footer --- */
         footer { text-align: center; padding: 20px; margin-top: 40px; background-color: #e0e0e0; color: #555; }
 
         /* --- Media Queries --- */
-        @media (min-width: 768px) {
-            .content-wrapper { flex-direction: row; align-items: flex-start; }
-            .scroll-arrow { display: block; /* Scroll-Pfeile auf dem Desktop anzeigen */ }
+        @media (min-width: 900px) {
+            .content-wrapper { flex-direction: row; align-items: stretch; } /* stretch sorgt für gleiche Höhe */
+            .shop-column { display: flex; flex-direction: column; }
+            .product-list-wrapper { flex-grow: 1; } /* Lässt den Container wachsen */
+            .scroll-arrow-vertical { display: block; } /* Pfeile auf Desktop anzeigen */
         }
     </style>
 </head>
 <body>
 
-    <header class="main-header">
-        <h1>Wavecam M</h1>
-        <p>Dein Live Surf Stream</p>
-    </header>
-
-    <div class="wave-separator">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path></svg>
-    </div>
+    <header class="main-header"><h1>Wavecam M</h1><p>Dein Live Surf Stream</p></header>
+    <div class="wave-separator"><svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path></svg></div>
 
     <div class="main-container">
         <div class="content-wrapper">
-            <div class="stream-container">
-                <img id="live-stream" src="" alt="Lade Live-Stream...">
+
+            <div class="stream-container"><img id="live-stream" src="" alt="Lade Live-Stream..."></div>
+
+            <div class="shop-column">
+                <h2>Surf Gear</h2>
+                <button class="scroll-arrow-vertical up" id="scroll-up">▲</button>
+                <div class="product-list-wrapper" id="product-list">
+                    <div class="product-list">
+                        <div class="product-card-vertical"><img src="https://via.placeholder.com/150.png/0A4D68/FFFFFF?text=Helm" alt="Helm"><div class="info"><h3>Pro Wave Helm</h3><div class="price">99.95 €</div></div></div>
+                        <div class="product-card-vertical"><img src="https://via.placeholder.com/150.png/088395/FFFFFF?text=Leash" alt="Leash"><div class="info"><h3>Sturm Leash 8ft</h3><div class="price">39.90 €</div></div></div>
+                        <div class="product-card-vertical"><img src="https://via.placeholder.com/150.png/FFA500/FFFFFF?text=Wax" alt="Wax"><div class="info"><h3>Bio Surf Wax</h3><div class="price">9.95 €</div></div></div>
+                        <div class="product-card-vertical"><img src="https://via.placeholder.com/150.png/333333/FFFFFF?text=Finnen" alt="Finnen"><div class="info"><h3>Carbon Finnen-Set</h3><div class="price">110.00 €</div></div></div>
+                        <div class="product-card-vertical"><img src="https://via.placeholder.com/150.png/e85a4f/FFFFFF?text=Boardbag" alt="Boardbag"><div class="info"><h3>Travel Boardbag</h3><div class="price">149.50 €</div></div></div>
+                        <div class="product-card-vertical"><img src="https://via.placeholder.com/150.png/0A4D68/FFFFFF?text=Helm" alt="Helm"><div class="info"><h3>Aqua Safe Helm</h3><div class="price">85.00 €</div></div></div>
+                    </div>
+                </div>
+                <button class="scroll-arrow-vertical down" id="scroll-down">▼</button>
             </div>
 
             <div class="ads-container">
@@ -181,65 +140,24 @@
                 <div class="ad-placeholder">Werbeplatz 3</div>
             </div>
         </div>
-
-        <div class="shop-section">
-            <div class="shop-header">
-                <h2>Surf Gear & Zubehör</h2>
-            </div>
-            <div class="shop-wrapper">
-                <button class="scroll-arrow left" id="scroll-left">‹</button>
-                <div class="product-scroller" id="product-scroller">
-                    <div class="product-card">
-                        <img src="https://via.placeholder.com/300x200.png/0A4D68/FFFFFF?text=Helm" alt="Helm">
-                        <div class="info"><h3>Pro Wave Helm</h3><div class="price">99.95 €</div></div>
-                    </div>
-                    <div class="product-card">
-                        <img src="https://via.placeholder.com/300x200.png/088395/FFFFFF?text=Leash" alt="Leash">
-                        <div class="info"><h3>Sturm Leash 8ft</h3><div class="price">39.90 €</div></div>
-                    </div>
-                    <div class="product-card">
-                        <img src="https://via.placeholder.com/300x200.png/FFA500/FFFFFF?text=Wax" alt="Wax">
-                        <div class="info"><h3>Bio Surf Wax</h3><div class="price">9.95 €</div></div>
-                    </div>
-                    <div class="product-card">
-                        <img src="https://via.placeholder.com/300x200.png/333333/FFFFFF?text=Finnen" alt="Finnen">
-                        <div class="info"><h3>Carbon Finnen-Set</h3><div class="price">110.00 €</div></div>
-                    </div>
-                     <div class="product-card">
-                        <img src="https://via.placeholder.com/300x200.png/e85a4f/FFFFFF?text=Boardbag" alt="Boardbag">
-                        <div class="info"><h3>Travel Boardbag</h3><div class="price">149.50 €</div></div>
-                    </div>
-                </div>
-                <button class="scroll-arrow right" id="scroll-right">›</button>
-            </div>
-        </div>
     </div>
 
-    <footer>
-        <p>&copy; 2025 Wavecam M. Alle Rechte vorbehalten.</p>
-    </footer>
+    <footer><p>&copy; 2025 Wavecam M. Alle Rechte vorbehalten.</p></footer>
 
     <script>
         // --- Live-Stream Script ---
         const imageUrl = 'https://pick200-esp32-isa.s3.eu-north-1.amazonaws.com/latest.jpg';
-        setInterval(function() {
-            const streamImage = document.getElementById('live-stream');
-            streamImage.src = imageUrl + '?t=' + new Date().getTime();
+        setInterval(() => {
+            document.getElementById('live-stream').src = `${imageUrl}?t=${new Date().getTime()}`;
         }, 100);
 
         // --- Shop Scroller Script ---
-        const scroller = document.getElementById('product-scroller');
-        const scrollLeftBtn = document.getElementById('scroll-left');
-        const scrollRightBtn = document.getElementById('scroll-right');
-
-        scrollLeftBtn.addEventListener('click', function() {
-            // Scrolle um die Breite einer Produktkarte nach links
-            scroller.scrollBy({ left: -300, behavior: 'smooth' });
+        const productList = document.getElementById('product-list');
+        document.getElementById('scroll-up').addEventListener('click', () => {
+            productList.scrollBy({ top: -150, behavior: 'smooth' });
         });
-
-        scrollRightBtn.addEventListener('click', function() {
-            // Scrolle um die Breite einer Produktkarte nach rechts
-            scroller.scrollBy({ left: 300, behavior: 'smooth' });
+        document.getElementById('scroll-down').addEventListener('click', () => {
+            productList.scrollBy({ top: 150, behavior: 'smooth' });
         });
     </script>
 
