@@ -1,34 +1,177 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-B">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP32-CAM Live Stream</title>
+    <title>ESP32-CAM Surf Stream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-        h1 { color: #333; }
-        img { border: 2px solid #ddd; max-width: 90%; height: auto; }
+        /* Grundlegende Stile */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #F8F4E8; /* Sandfarbe */
+            color: #333;
+        }
+
+        /* Header */
+        header.main-header {
+            background: linear-gradient(45deg, #0A4D68, #088395); /* Ozeanblau-Gradient */
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header.main-header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        header.main-header p {
+            margin: 5px 0 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        /* Das Wellen-Design */
+        .wave-separator {
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+        .wave-separator svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 100px; /* Höhe der Welle anpassen */
+        }
+
+        .wave-separator .shape-fill {
+            fill: #0A4D68; /* Gleiche Farbe wie Header-Start */
+        }
+
+        /* Hauptcontainer */
+        .main-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column; /* Mobile-First: Alles untereinander */
+            gap: 20px;
+        }
+        
+        /* Live-Stream Container */
+        .stream-container {
+            flex: 2; /* Nimmt mehr Platz auf dem Desktop ein */
+        }
+
+        .stream-container img {
+            border: 5px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            width: 100%;
+            height: auto;
+            background-color: #ddd;
+        }
+
+        /* Werbe-Container (Seitenleiste auf dem Desktop) */
+        .ads-container {
+            flex: 1; /* Nimmt weniger Platz auf dem Desktop ein */
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Werbeplatz-Stile */
+        .ad-placeholder {
+            background-color: #ff4136; /* Deutliches Rot */
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 10px;
+            min-height: 100px;
+        }
+
+        .ad-placeholder.desktop-only {
+            display: none; /* Auf Mobilgeräten standardmäßig ausblenden */
+        }
+        
+        .ad-placeholder.mobile-only {
+            display: flex; /* Auf Mobilgeräten standardmäßig anzeigen */
+        }
+
+
+        /* Desktop-Ansicht (Media Query) */
+        @media (min-width: 768px) {
+            .main-container {
+                flex-direction: row; /* Desktop: Nebeneinander */
+            }
+
+            .ad-placeholder.desktop-only {
+                display: flex; /* Auf dem Desktop anzeigen */
+                min-height: 250px;
+            }
+            
+            .ad-placeholder.mobile-only {
+                display: none; /* Auf dem Desktop ausblenden */
+            }
+        }
     </style>
 </head>
 <body>
 
-    <h1>ESP32-CAM Live Stream</h1>
-    <p>Verbindung zum Live-Bild aus der Cloud.</p>
-    
-    <img id="live-stream" src="" alt="Lade Live-Stream...">
+    <header class="main-header">
+        <h1>ESP32-CAM</h1>
+        <p>Dein Live Surf Stream</p>
+    </header>
+
+    <div class="wave-separator">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+        </svg>
+    </div>
+
+    <div class="main-container">
+
+        <div class="ad-placeholder mobile-only">
+            <span>Werbeplatz (Banner Oben)</span>
+        </div>
+
+        <div class="stream-container">
+            <img id="live-stream" src="" alt="Lade Live-Stream...">
+        </div>
+
+        <div class="ads-container">
+            <div class="ad-placeholder desktop-only" style="min-height: 280px;">
+                <span>Werbeplatz (Desktop Seitenleiste 1)</span>
+            </div>
+            <div class="ad-placeholder desktop-only">
+                <span>Werbeplatz (Desktop Seitenleiste 2)</span>
+            </div>
+            
+            <div class="ad-placeholder mobile-only">
+                <span>Werbeplatz (Banner Unten)</span>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // HIER MUSST DU DIE ÖFFENTLICHE URL DEINES BILDES AUS DEM S3 BUCKET EINTRAGEN
+        // DEINE URL HIER EINTRAGEN!
         const imageUrl = 'https://pick200-esp32-isa.s3.eu-north-1.amazonaws.com/latest.jpg';
 
-        // Diese Funktion aktualisiert das Bild alle 100 Millisekunden
+        // Diese Funktion aktualisiert das Bild alle 100 Millisekunden (wie im Original)
         setInterval(function() {
             const streamImage = document.getElementById('live-stream');
-            // Wir fügen einen Zeitstempel hinzu, um den Browser-Cache zu umgehen. Das ist SEHR WICHTIG!
+            // Der Zeitstempel ist entscheidend, um den Cache zu umgehen
             streamImage.src = imageUrl + '?t=' + new Date().getTime();
         }, 100);
     </script>
 
 </body>
-
 </html>
